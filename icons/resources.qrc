@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="/icons">
+    <file>rco_view.icns</file>
+    <file>rco_view.ico</file>
+    <file>update_firmware.png</file>
+  </qresource>
+</RCC>
