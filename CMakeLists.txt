@@ -13,6 +13,7 @@ set(CMAKE_CXX_EXTENSIONS ON)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Gui REQUIRED)
+find_package(Qt5SerialPort REQUIRED)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -50,9 +51,11 @@ include_directories(
 add_definitions(${Qt5Core_DEFINITIONS})
 add_definitions(${Qt5Widgets_DEFINITIONS})
 add_definitions(${Qt5Gui_DEFINITIONS})
+add_definitions(${Qt5SerialPort_DEFINITIONS})
 add_compile_definitions(${Qt5Core_COMPILE_DEFINITIONS})
 add_compile_definitions(${Qt5Widgets_COMPILE_DEFINITIONS})
 add_compile_definitions(${Qt5Gui_COMPILE_DEFINITIONS})
+add_compile_definitions(${Qt5SerialPort_COMPILE_DEFINITIONS})
 
 add_definitions(-DSPDLOG_ACTIVE_LEVEL=SPDLOG_LEVEL_TRACE)
 
@@ -83,5 +86,6 @@ target_link_libraries(${TARGET_NAME}
   Qt5::Core
   Qt5::Widgets
   Qt5::Gui
+  Qt5::SerialPort
   spdlog
   )
