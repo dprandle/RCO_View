@@ -17,6 +17,9 @@
    <iconset resource="../icons/resources.qrc">
     <normaloff>:/icons/rco_view.icns</normaloff>:/icons/rco_view.icns</iconset>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <property name="spacing">
