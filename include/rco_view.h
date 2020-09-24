@@ -1,6 +1,7 @@
 #pragma once
 #include <QMainWindow>
 
+#define dtext(param) ui->textEdit->textCursor().insertText(param)
 namespace Ui
 {
 class RCO_View;
@@ -29,7 +30,7 @@ public slots:
   private:
     void build_treeview_from_serial_();
 
-    void data_ready();
+    void firmware_update_data_ready();
 
     Ui::RCO_View * ui;
     QStandardItemModel * model_;

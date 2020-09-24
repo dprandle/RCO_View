@@ -3,6 +3,7 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include <qdebug.h>
+#include <QFileDialog>
 
 #include "shared_structs.h"
 #include "rco_view.h"
@@ -83,7 +84,6 @@ void RCO_View::build_treeview_from_serial_()
         sp->setDataBits(QSerialPort::Data8);
         sp->setStopBits(QSerialPort::OneStop);
         sp->setParity(QSerialPort::NoParity);
-        connect(sp, &QSerialPort::readyRead, this, &RCO_View::data_ready);
         serial_ports[spi_iter->portName()] = sp;
         ++spi_iter;
         ++row_ind;
@@ -97,35 +97,62 @@ void RCO_View::on_actionUpdate_Firmware_triggered()
     auto sp = selected_serial_port();
     if (!sp)
         return;
-    if (!sp->open(QSerialPort::ReadWrite))
+
+    QString fname = QFileDialog::getOpenFileName(this, "Raspberry Pi Firmware", "../firmware","*.rpi");
+    if (fname.isEmpty())
     {
-        ui->textEdit->insertPlainText("Error opening port " + sp->portName() + ": " + sp->errorString());
+        dtext("Operation aborted by user!\n");
         return;
     }
-    sp->write("FWU\r");
+
+    QFile firmware(fname);
+    if (!firmware.open(QIODevice::ReadOnly))
+    {
+        dtext("Could not open file " + fname + "!\n");
+        return;
+    }
+
+    QByteArray barr = firmware.readAll();
+
+    if (!sp->open(QSerialPort::ReadWrite))
+    {
+        dtext("Error opening port " + sp->portName() + ": " + sp->errorString());
+        return;
+    }
+
+
     Firmware_Header fwh;
-    fwh.byte_size = 70000;
+    fwh.byte_size = barr.size();//barr.size();
     fwh.v_major = 1;
     fwh.v_minor = 0;
     fwh.v_minor = 0;
+
+    dtext("About to upload firmware v" + QString::number(fwh.v_major) + "." + QString::number(fwh.v_minor) + "." + QString::number(fwh.v_patch));
+
+    connect(sp, &QSerialPort::readyRead, this, &RCO_View::firmware_update_data_ready);
+    sp->write("FWU\r");
     sp->write((char*)fwh.data, FIRMWARE_HEADER_SIZE);
 
-    char payload[70000];
-    sp->write(payload, 70000);
+    char payload[6000];
+    sp->write(barr.data(), barr.size());
+    sp->write("RBUFW\r");
 }
 
-void RCO_View::data_ready()
+void RCO_View::firmware_update_data_ready()
 {
     QSerialPort * port = static_cast<QSerialPort *>(sender());
     QByteArray data = port->readAll();
     for (int i = 0; i < data.size(); ++i)
     {
         if (data[i] == '\n')
+        {
+            disconnect(port, &QSerialPort::readyRead, this, &RCO_View::firmware_update_data_ready);
             port->close();
+        }
         else if (data[i] == '\b')
             ui->textEdit->textCursor().deletePreviousChar();
         else
-            ui->textEdit->textCursor().insertText(data);
+            dtext(data);
     }
 }
 
