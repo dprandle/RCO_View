@@ -43,19 +43,12 @@ qt5_add_resources(SRC_RES_FILE ${CMAKE_SOURCE_DIR}/icons/resources.qrc)
 include_directories(
   ${RCO_VIEW_INCLUDE_DIR}
   ${MOC_INCLUDE_DIR}
-  # ${Qt5Core_INCLUDE_DIRS}
-  # ${Qt5Widgets_INCLUDE_DIRS}
-  # ${Qt5Gui_INCLUDE_DIRS}
 )
 
 add_definitions(${Qt5Core_DEFINITIONS})
 add_definitions(${Qt5Widgets_DEFINITIONS})
 add_definitions(${Qt5Gui_DEFINITIONS})
 add_definitions(${Qt5SerialPort_DEFINITIONS})
-# add_compile_definitions(${Qt5Core_COMPILE_DEFINITIONS})
-# add_compile_definitions(${Qt5Widgets_COMPILE_DEFINITIONS})
-# add_compile_definitions(${Qt5Gui_COMPILE_DEFINITIONS})
-# add_compile_definitions(${Qt5SerialPort_COMPILE_DEFINITIONS})
 
 add_subdirectory(deps/spdlog)
 
@@ -67,7 +60,6 @@ else()
   add_definitions(-DRELEASE_VERSION)
   add_definitions(-DQT_NO_DEBUG)
 endif()
-
 
 if (WIN32)
 elseif(APPLE)

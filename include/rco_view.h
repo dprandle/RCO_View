@@ -1,7 +1,9 @@
 #pragma once
 #include <QMainWindow>
 
-#define dtext(param) ui->textEdit->textCursor().insertText(param)
+#define rco_view RCO_View::inst()
+#define dtext(param) rco_view.console_print(param)
+
 namespace Ui
 {
 class RCO_View;
@@ -9,6 +11,7 @@ class RCO_View;
 
 class QStandardItemModel;
 class QSerialPort;
+class Dialog_Firmware_Settings;
 
 const int COLUMN_NODE = 0;
 const int COLUMN_FIRMWARE = 1;
@@ -24,15 +27,20 @@ class RCO_View : public QMainWindow
 
     QSerialPort * selected_serial_port();
 
+    static RCO_View & inst();
+
+    void console_print(const QString & param);
+
+    Ui::RCO_View * ui;
+
 public slots:
     void on_actionUpdate_Firmware_triggered();
 
   private:
     void build_treeview_from_serial_();
 
-    void firmware_update_data_ready();
-
-    Ui::RCO_View * ui;
+    static RCO_View * this_static;
+    Dialog_Firmware_Settings * dfs_;
     QStandardItemModel * model_;
     QMap<QString, QSerialPort*> serial_ports;
 };
