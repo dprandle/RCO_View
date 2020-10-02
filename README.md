@@ -10,12 +10,13 @@ RCO View is a program that can connect to multiple RCOs over the RCE serial data
 * Generate ssh key with "sudo ssh-keygen -A" and reboot
 * Open rasp pi in vscode
 * Create bin folder in home directory
-* Copy everything from firmware folder to the bin folder
-* chmod +x to the firmware file
+* Copy everything from firmware folder to the home folder (/home/ubuntu)
+* chmod +x to the firmware file located in bin directory
 * Create shortcut to firmware called RCO_Monitor
-  * "ln -s ./RCO_Monitor-vX.X.X.rpi ./RCO_Monitor"
+  * "cd /home/ubuntu/bin && ln -s ./RCO_Monitor-vX.X.X.rpi ./RCO_Monitor"
 * Create the system service
-  * "sudo systemctl link ./RCO_Monitor.service"
+  * "sudo systemctl link /home/ubuntu/RCO_Monitor.service"
   * "sudo systemctl enable RCO_Monitor"
 * reboot - verify program is running:
   * "sudo systemctl status RCO_Monitor"
+* Connect to rce and verify can get firmware version
